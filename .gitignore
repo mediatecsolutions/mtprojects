@@ -1,0 +1,21 @@
+*.log
+*.pot
+*.pyc
+*.db
+*.DS_Store
+local.py
+*.sqlite3
+
+# for all vim temporary files
+.*.sw*
+
+# random redis dump files
+*.rdb
+
+# for your own local environment
+venv/*
+
+/static/
+/cache/
+
+*_index/

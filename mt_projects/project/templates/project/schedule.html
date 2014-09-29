@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load compress %}
+{% block body %}
+{% compress css %}
+<link rel=stylesheet type=text/less href={{ STATIC_URL }}less/project/schedule.less />
+{% endcompress %}
+{# vendor css #}
+{% compress css %}
+<link rel=stylesheet type=text/less href={{ STATIC_URL }}css/fullcalendar/fullcalendar.css />
+{% endcompress %}
+{# fullcalendar js #}
+{% compress js %}
+<script src={{ STATIC_URL }}js/moment/moment.js></script>
+<script src={{ STATIC_URL }}js/jquery-ui/jquery-ui.js></script>
+<script src={{ STATIC_URL }}js/fullcalendar/fullcalendar.js></script>
+<script src={{ STATIC_URL }}js/fullcalendar/lang/sv.js></script>
+<script>
+'2014-09-09T16:00:00'
+  $(document).ready(function() {
+    $('#calendar').fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      weekNumbers: true,
+      eventLimit: true, // allow "more" link when too many events
+      events: [
+      {% for project in projects %}
+      {{'{'}}
+        editable: false,
+        title:'{{project.name}}',
+        start:'{{project.start_time|date:"c"}}',
+        end:'{{project.end_time|date:"c"}}',
+        className:'event-project',
+        url:'/project/{{project.id}}/'
+      {{'}'}}
+      {% if forloop.counter < length %}
+      {{','}}
+      {% endif %}
+      {% endfor %}
+      ]
+    });
+  });
+</script>
+{% endcompress %}
+<div id=calendar></div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load compress %}
+{% block body %}
+{% compress css %}
+<link rel=stylesheet type=text/less href={{ STATIC_URL }}less/project/project.less />
+{% endcompress %}
+<div class="row projects-header">
+  <div class=col-xs-12>
+    <h1 class=pull-left>{% trans 'Prosjekter' %}</h1>
+    {% if not is_freelancer %}
+    <a href=/project/new/ class="create-project-btn btn btn-primary pull-right"><span class="glyphicon glyphicon-plus"></span> {% trans 'Nytt prosjekt' %}</a>
+    {% endif %}
+  </div>
+</div>
+<div class=row>
+{% for project in projects %}
+<div class="col-md-3 col-sm-6 col-xs-12">
+  <div class="panel panel-primary project-listing">
+      <div class=panel-heading>
+        <h3 class=panel-title>{{project.name}}
+          {% if not is_freelancer %}
+          <a href="/project/{{project.id}}/edit/">
+            <span class="glyphicon glyphicon-pencil pull-right"></span>
+          </a>
+          {% endif %}
+        </h3>
+      </div>
+    <div class=panel-body>
+      {% if project.client %}
+      <p>
+        <span class=emphasized>{% trans 'Kunde: ' %}</span>{{project.client.name}}
+      </p>
+      {% else %}
+      <p>
+        <span class=emphasized>{% trans 'Internt prosjekt' %}
+      </p>
+      {% endif %}
+      <p>
+        <span class=emphasized>{% trans 'Start: ' %}</span>{{project.start_time|date:"j.m.Y H:i"}}
+      </p>
+      <p>
+        <span class=emphasized>{% trans 'Slutt: ' %}</span>{{project.end_time|date:"j.m.Y H:i"}}
+      </p>
+      {% if project.todos_count %}
+      <div class=todo-section>
+        <p>
+          <span class=emphasized>{% trans 'Ferdige oppgaver: ' %}</span>{{project.finished_todos}} / {{project.todos_count }}
+        </p>
+        <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{project.completion_percentage}}%;">
+            {{project.completion_percentage}}%
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <p>
+        <a href="/project/{{project.id}}/"><span class=emphasized>{% trans 'Detaljer' %}</a>
+      </p>
+    </div>
+    <ul class="list-group">
+      {% for responsible in project.responsible.all %}
+      <li class="list-group-item"><span class="glyphicon glyphicon-user"></span> {{responsible.first_name}} {{responsible.last_name}}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% if forloop.counter|divisibleby:4 %}
+</div>
+<div class=row>
+{% endif %}
+{%  endfor %}
+</div>
+{% endblock %}

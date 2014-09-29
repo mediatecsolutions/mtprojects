@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load compress %}
+{% block body %}
+<div class="row">
+  <div class=col-xs-12>
+    <h1 class=pull-left>{% trans 'Oppgaver' %}<h1>
+    {% if not is_freelancer %}
+    <a href=/todo/add/ class="create-project-btn btn btn-primary pull-right"><span class="glyphicon glyphicon-plus"></span> {% trans 'Ny oppgave' %}</a>
+    {% endif %}
+  </div>
+</div>
+<div class=row>
+{% for user in users %}
+  {% if user.todos %}
+  <div class="col-sm-6 col-xs-12">
+    <div class=well>
+      <h3><span class="glyphicon glyphicon-user"></span> {{user.first_name}} {{user.last_name}}</h3>
+      <div class=row>
+      {% for todo in user.todos %}
+        <div class="col-sm-6 col-xs-12">
+          <div class="panel panel-{% if todo.is_finished %}success{% else %}danger{% endif %}">
+            <div class=panel-heading>
+              <h3 class=panel-title>{{todo.title}}
+                {% if not is_freelancer %}
+                <a href="/todo/{{todo.id}}/delete/">
+                  <span class="glyphicon glyphicon-remove pull-right"></span>
+                </a>
+                <a href="/todo/{{todo.id}}/edit/">
+                  <span style=margin-right:20px; class="glyphicon glyphicon-pencil pull-right"></span>
+                </a>
+                {% endif %}
+              </h3>
+            </div>
+            <div class=panel-body>
+              {% if todo.text%}
+                <p>
+                  <span class=emphasized>{% trans 'Beskrivelse:' %}</span> {{todo.text}}
+                </p>
+              {% endif%}
+              {% if todo.deadline %}
+              <p>
+                <span class=emphasized>{% trans 'Deadline:' %}</span> {{todo.deadline|date:"j.m.Y H:i"}}
+              </p>
+              {% endif %}
+              {% if todo.project%}
+                <p>
+                  <span class=emphasized>{% trans 'Prosjekt:' %}</span><a href="/project/{{todo.project.id}}/"> {{todo.project.name}}</a>
+                </p>
+              {% endif%}
+              {% if request.user.is_staff or request.user == todo.user %}
+              <p>
+                <a href=/todo/{{todo.id}}/{% if not todo.is_finished %}finish{% else %}reopen{% endif %}/ class="btn btn-sm btn-{% if not todo.is_finished %}success{% else %}danger{% endif %}">
+                  {% if todo.is_finished %}
+                  <span class="glyphicon glyphicon-remove"></span> {% trans 'Gjenåpne' %}
+                  {% else %}
+                  <span class="glyphicon glyphicon-ok"></span> {% trans 'Marker som ferdig' %}
+                  {% endif %}
+                </a>
+              </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% if forloop.counter|divisibleby:2 %}
+      </div>
+      <div class=row>
+      {% endif %}
+      {%  endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if forloop.counter|divisibleby:2 %}
+</div>
+<div class=row>
+{% endif %}
+{%  endfor %}
+</div>
+{% endblock %}

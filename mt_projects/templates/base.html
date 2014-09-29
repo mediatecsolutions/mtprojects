@@ -1,0 +1,85 @@
+{% load compress %}
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, target-densityDpi=device-dpi user-scalable=no" />
+    <title>{% trans 'Mediatec innholdsproduksjon' %}</title>
+    {# mediatec less #}
+    {% compress css %}
+    <link rel=stylesheet type=text/less href={{ STATIC_URL }}less/mediatec/mediatec.less />
+    {% endcompress %}
+    {# bootstrap js #}
+    {% compress js %}
+    <script src={{ STATIC_URL }}js/jquery/jquery-1.11.1.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/affix.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/alert.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/button.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/carousel.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/collapse.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/dropdown.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/modal.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/tooltip.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/popover.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/scrollspy.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/tab.js></script>
+    <script src={{ STATIC_URL }}js/bootstrap/transition.js></script>
+    {% endcompress %}
+  </head>
+    <body>
+      {% block navbar %}
+      <nav class="navbar navbar-default" role=navigation>
+        <div class=container-fluid>
+          <div class=navbar-header>
+            <button type=button class="navbar-toggle collapsed" data-toggle=collapse data-target=#bs-example-navbar-collapse-1>
+              <span class=sr-only>{% trans 'Vis meny' %}</span>
+              <span class=icon-bar></span>
+              <span class=icon-bar></span>
+              <span class=icon-bar></span>
+            </button>
+            <a class=navbar-brand href="/">{% trans 'Mediatec innholdsproduksjon' %}</a>
+          </div>
+          <div class="collapse navbar-collapse" id=bs-example-navbar-collapse-1>
+            <ul class="nav navbar-nav">
+              <li {% if request.path == '/' %} class=active {% endif %} ><a href=/>{% trans 'Tidsplan' %}</a></li>
+              <li {% if request.path == '/project/' %} class=active {% endif %}  ><a href=/project/>{% trans 'Prosjekter' %}</a></li>
+              <li {% if request.path == '/todo/' %} class=active {% endif %} ><a href=/todo/>{% trans 'Oppgaver' %}</a></li>
+              {% if False %}
+              <li {% if request.path == '/note/' %} class=active {% endif %} ><a href=/note/>{% trans 'Notater' %}</a></li>
+              <li {% if request.path == '/quote/' %} class=active {% endif %}  ><a href=/quote/>{% trans 'Tilbud / Faktura' %}</a></li>
+              {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class=dropdown>
+                <a href=# class="dropdown-toggle" data-toggle="dropdown">
+                  <span class="glyphicon glyphicon-user"></span>
+                  {{request.user.first_name}} {{request.user.last_name}}
+                  <span class=caret></span>
+                </a>
+                <ul class=dropdown-menu role=menu>
+                  <li><a href=/logout/><span class="glyphicon glyphicon-log-out"></span> {% trans 'Logg ut' %}</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      {% endblock %}
+      {% block login_image %}
+      {% endblock %}
+      <div class=container-fluid>
+        {% if messages %}
+        <div class=messages>
+          {% for message in messages %}
+          <div class="alert-dismissible alert{% if message.tags %} alert-{{ message.tags }}"{% endif %}>
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% block body %}
+        {% endblock %}
+      </div>
+    </body>
+</html>

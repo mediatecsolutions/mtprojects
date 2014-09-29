@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block navbar %}
+{% endblock %}
+{% block login_image %}
+
+{% endblock %}
+{% block body %}
+<div class=row>
+  <div class="col-sm-offset-4 col-sm-4 login-image-wrapper">
+    <img class=img-responsive src={{STATIC_URL}}img/Mediatec_logo_PMS.png />
+  </div>
+</div>
+<div class=row>
+  <div class="col-sm-offset-4 col-sm-4 login-title">
+    <h2>{% trans 'Logg inn' %}</h2>
+  </div>
+</div>
+<div class=row>
+  <div class="col-sm-offset-4 col-sm-4">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <input name=email type="email" class="form-control" id="exampleInputEmail1" placeholder="{% trans 'Epost' %}">
+      </div>
+      <div class="form-group">
+        <input name=password type="password" class="form-control" id="exampleInputPassword1" placeholder="{% trans 'Passord' %}">
+      </div>
+       <button type="submit" class="btn btn-primary login-btn">{% trans 'Logg inn' %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
